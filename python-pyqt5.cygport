@@ -1,0 +1,56 @@
+inherit python qt5
+
+NAME="python-pyqt5"
+VERSION=5.0
+RELEASE=1
+CATEGORY="Python"
+SUMMARY="Python Qt5 bindings"
+DESCRIPTION="PyQt is a set of Python bindings for the Qt application
+framework and runs on all platforms supported by Qt. The bindings are
+implemented as a set of Python modules and contain over 300 classes and
+over 6,000 functions and methods."
+HOMEPAGE="http://www.riverbankcomputing.co.uk/software/pyqt/"
+SRC_URI="mirror://sourceforge/pyqt/PyQt-gpl-${VERSION}.tar.gz"
+SRC_DIR="PyQt-gpl-${VERSION}"
+PATCH_URI="
+	5.0-cygwin.patch
+	5.0-dbus-mainloop-qt5.patch
+"
+
+python_pyqt5_CONTENTS="--exclude=port_v3 usr/"
+PKG_IGNORE="${PYTHON_SITELIB#/}/PyQt5/uic/port_v3"
+REQUIRES="python-dbus"
+
+src_compile() {
+	lndirs
+	cd ${B}
+
+	rm -f configure.py
+	cp ${S}/configure.py .
+
+	${PYTHON} configure.py \
+		--bindir ${PYTHON_SITELIB}/PyQt5 \
+		--concatenate \
+		--destdir ${PYTHON_SITELIB} \
+		--designer-plugindir ${QT5_PLUGINSDIR} \
+		--qmake ${QT5_QMAKE} \
+		--sip ${PYTHON_SITELIB}/sip \
+		--sipdir /usr/share/python-sip/PyQt5 \
+		--assume-shared \
+		--confirm-license \
+		"CFLAGS+=${CFLAGS}" "CXXFLAGS+=${CXXFLAGS}" \
+		|| error "configure.py failed"
+
+	cygmake
+}
+
+src_install() {
+	cd ${B}
+	cyginstall INSTALL_ROOT=${D}
+	python_optimize
+
+	keepdir ${QT5_PLUGINSDIR}/designer/python
+
+#	docinto html
+#	dodoc doc/PyQt.html
+}
