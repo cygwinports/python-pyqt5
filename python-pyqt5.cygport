@@ -1,7 +1,7 @@
 inherit python qt5
 
 NAME="python-pyqt5"
-VERSION=5.2.1
+VERSION=5.3.2
 RELEASE=1
 CATEGORY="Python"
 SUMMARY="Python Qt5 bindings"
@@ -31,13 +31,13 @@ src_compile() {
 		--bindir ${PYTHON_SITELIB}/PyQt5 \
 		--concatenate \
 		--destdir ${PYTHON_SITELIB} \
-		--designer-plugindir ${QT5_PLUGINSDIR} \
+		--designer-plugindir ${QT5_PLUGINSDIR}/designer \
 		--qmake ${QT5_QMAKE} \
 		--sip ${PYTHON_SITELIB}/sip \
 		--sipdir /usr/share/python-sip/PyQt5 \
 		--assume-shared \
 		--confirm-license \
-		"CFLAGS+=${CFLAGS}" "CXXFLAGS+=${CXXFLAGS}" \
+		QMAKE_CFLAGS="${CFLAGS}" QMAKE_CXXFLAGS="${CXXFLAGS}" STRIP=: \
 		|| error "configure.py failed"
 
 	cygmake
