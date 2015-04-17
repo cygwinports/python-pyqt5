@@ -1,7 +1,7 @@
 inherit python qt5
 
 NAME="python-pyqt5"
-VERSION=5.3.2
+VERSION=5.4.1
 RELEASE=1
 CATEGORY="Python"
 SUMMARY="Python Qt5 bindings"
@@ -19,6 +19,8 @@ PATCH_URI="
 python_pyqt5_CONTENTS="--exclude=port_v3 usr/"
 PKG_IGNORE="${PYTHON_SITELIB#/}/PyQt5/uic/port_v3"
 REQUIRES="python-dbus"
+
+DIFF_EXCLUDES="qmldir"
 
 src_compile() {
 	lndirs
