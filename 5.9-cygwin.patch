@@ -1,0 +1,32 @@
+--- origsrc/PyQt5_gpl-5.9.2/configure.py	2017-11-23 08:44:03.000000000 -0600
++++ src/PyQt5_gpl-5.9.2/configure.py	2017-12-10 15:44:42.532423300 -0600
+@@ -964,8 +964,8 @@ class TargetConfiguration:
+         # Python.h on Windows seems to embed the need for pythonXY.lib, so tell
+         # it where it is.
+         if not self.static:
+-            pro_lines.extend(['win32 {',
+-                    '    LIBS += ' + self.get_pylib_link_arguments(name=False),
++            pro_lines.extend(['win32|cygwin {',
++                    '    LIBS += ' + self.get_pylib_link_arguments(name=True),
+                     '}'])
+ 
+     @staticmethod
+@@ -2571,6 +2571,9 @@ def generate_module_makefile(target_conf
+ win32 {
+     PY_MODULE = %s%s.pyd
+     PY_MODULE_SRC = $(DESTDIR_TARGET)
++} else:cygwin {
++    PY_MODULE = %s.dll
++    PY_MODULE_SRC = $(TARGET)
+ } else {
+     PY_MODULE = %s.so
+ 
+@@ -2591,7 +2594,7 @@ QMAKE_POST_LINK = $(COPY_FILE) $$PY_MODU
+ 
+ target.CONFIG = no_check_exist
+ target.files = $$PY_MODULE
+-''' % (target_name, debug_suffix, target_name, extra_lflags)
++''' % (target_name, debug_suffix, target_name, target_name, extra_lflags)
+ 
+         pro_lines.extend(shared.split('\n'))
+ 
